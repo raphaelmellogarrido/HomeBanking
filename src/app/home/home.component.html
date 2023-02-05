@@ -1,0 +1,131 @@
+<!-- Content -->
+<mat-toolbar color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+    <span id="action-title">
+      {{title}}
+    </span>
+    <!-- Logout -->
+    <div id="menu-List" fxLayout="row" fxShow="false" fxShow.gt-sm>
+      <button mat-button *ngIf="isAuthenticated" (click)="logout()">
+        Logout
+      </button>
+    </div>
+</mat-toolbar>
+<mat-card *ngIf="loggedUser">
+    <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+      <!-- User -->      
+      <div>
+          <h3>User: {{loggedUser['username']}}</h3>
+      </div>
+      <!-- Account total -->
+      <div>
+          <h3>Account total: {{loggedUser['accountValue']}}</h3>
+      </div>
+      <!-- Buttons -->
+      <div id="options-List" fxLayout="row" fxShow="false" fxShow.gt-sm>
+        <!-- Deposit button -->
+        <button mat-button color="primary" class="options-button" (click)="doDepositClick()">
+          Do a Deposit
+        </button>
+       <!-- Withdrawal button -->
+        <button mat-button color="primary" class="options-button" (click)="doWithdrawalClick()">
+          Do a Withdrawal
+        </button>
+       <!-- Action list button -->
+        <button mat-button color="primary" class="options-button" (click)="showActionListClick()">
+          Show Action List
+        </button>
+      </div>
+    </mat-card-content>
+</mat-card>
+
+<!-- Deposit -->
+<mat-card *ngIf="doDeposit">
+  <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmitDeposit()">
+      <div>
+          <h3>Deposit in your account</h3>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Value to deposit" [(ngModel)]="amountValue" name="deposit" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-raised-button color="primary">Deposit</button>
+      </div>
+    </form>
+    <div class="alert alert-danger" *ngIf="actionError">
+      Value to deposit must be a valid integer number.
+    </div>
+    <div class="alert alert-success" *ngIf="actionSucess">
+      Deposit done.
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Withdrawal -->
+<mat-card *ngIf="doWithdrawal">
+  <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmitWithdraw()">
+      <div>
+          <h3>Withdraw of your account</h3>
+      </div>
+      <div>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Value to withdraw" [(ngModel)]="amountValue" name="withdraw" required>
+        </mat-form-field>
+      </div>
+      <div>
+        <button mat-raised-button color="primary">Withdraw</button>
+      </div>
+    </form>
+    <div class="alert alert-danger" *ngIf="actionError">
+      Value to withdraw must be a valid integer number.
+    </div>
+    <div class="alert alert-success" *ngIf="actionSucess">
+      Withdraw done.
+    </div>
+    <div class="alert alert-danger" *ngIf="actionAmount">
+      You don't have this amount on your balance.
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<!-- Action List -->
+<mat-card *ngIf="showActionList">
+  <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+      <div>
+          <h3>Your account transaction list</h3>
+      </div>
+      <div>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">        
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> ID. </th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+        
+          <!-- Type Column -->
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef> Type </th>
+            <td mat-cell *matCellDef="let element"> {{element.type}} </td>
+          </ng-container>
+        
+          <!-- Value Column -->
+          <ng-container matColumnDef="value">
+            <th mat-header-cell *matHeaderCellDef> Value </th>
+            <td mat-cell *matCellDef="let element"> {{element.value}} </td>
+          </ng-container>
+        
+          <!-- Date Column -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Date </th>
+            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+    </div>
+  </mat-card-content>
+</mat-card>
